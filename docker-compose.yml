@@ -1,0 +1,12 @@
+services:
+  docuflow:
+    build: .
+    container_name: docuflow-service
+    ports:
+      - "8003:8003"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8003
+      - LLM_API_KEY=${LLM_API_KEY:-}
+    restart: unless-stopped
+

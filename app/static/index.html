@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DocuFlow | Intelligent Document & Invoice Processing</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans">
+  <!-- Navbar -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <div class="h-9 w-9 rounded-lg bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+        <i class="fa-solid fa-file-invoice-dollar text-white text-lg"></i>
+      </div>
+      <div>
+        <h1 class="text-lg font-bold tracking-tight text-white flex items-center">
+          DocuFlow
+          <span class="ml-2 text-[10px] uppercase font-mono bg-slate-800 text-blue-400 px-2 py-0.5 rounded border border-blue-950">IDP Engine</span>
+        </h1>
+        <p class="text-xs text-slate-400">Intelligent Document Processing, Ledger Math Reconciliation & ERP Sync</p>
+      </div>
+    </div>
+    <div class="flex items-center space-x-4">
+      <span class="text-xs text-emerald-400 font-mono">
+        <i class="fa-solid fa-check-double mr-1"></i>Math Reconciliation Active
+      </span>
+      <a href="/docs" target="_blank" class="text-xs text-slate-400 hover:text-blue-400 transition-colors">
+        <i class="fa-solid fa-code mr-1"></i>API Docs
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Grid -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- Left Column: Document Input -->
+    <div class="lg:col-span-5 space-y-4">
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center">
+            <i class="fa-solid fa-file-lines mr-2 text-blue-400"></i>Raw Document Text / OCR
+          </h2>
+          <span class="text-[10px] text-slate-500 font-mono">Text / PDF Dump</span>
+        </div>
+
+        <form id="extractForm" class="space-y-3">
+          <div>
+            <textarea id="docInput" rows="13" required
+              placeholder="Paste raw invoice text, OCR dump, or select a sample..."
+              class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-300 focus:outline-none focus:border-blue-500 leading-relaxed"></textarea>
+          </div>
+
+          <!-- Samples -->
+          <div>
+            <span class="text-xs text-slate-500 block mb-1.5">Load Benchmark Invoice:</span>
+            <div class="flex flex-wrap gap-1.5">
+              <button type="button" onclick="loadSample('clean_software_invoice')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded transition border border-slate-700">
+                <i class="fa-solid fa-check text-emerald-400 mr-1"></i>Clean Software Invoice
+              </button>
+              <button type="button" onclick="loadSample('invoice_with_math_discrepancy')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded transition border border-slate-700">
+                <i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1"></i>Math Discrepancy
+              </button>
+              <button type="button" onclick="loadSample('cloud_infrastructure_bill')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded transition border border-slate-700">
+                <i class="fa-solid fa-cloud text-indigo-400 mr-1"></i>Cloud Hosting Bill
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" id="submitBtn" class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-medium text-xs flex items-center justify-center space-x-2 transition shadow-lg shadow-blue-600/30">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>Extract & Reconcile Ledger</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Right Column: Extracted Ledger & Audit -->
+    <div class="lg:col-span-7 space-y-4">
+      <!-- Ledger Status Strip -->
+      <div id="statusCard" class="hidden bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+          <div class="flex items-center space-x-3">
+            <span id="reviewBadge" class="text-xs font-bold uppercase px-3 py-1 rounded-full bg-slate-800 text-slate-300 font-mono">
+              Pending
+            </span>
+            <span id="invoiceNumber" class="text-xs font-mono text-slate-300 font-bold">INV-XXXX</span>
+          </div>
+          <span id="auditConfidence" class="text-xs font-mono text-slate-400">Confidence: --%</span>
+        </div>
+
+        <!-- Audit Errors / Flags -->
+        <div id="auditNotes" class="space-y-1.5 text-xs">
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 mt-4 pt-3 border-t border-slate-800 text-center text-xs">
+          <div>
+            <span class="text-slate-500 block text-[10px]">Stated Total</span>
+            <span id="statedTotal" class="font-bold text-slate-200 text-sm">$0.00</span>
+          </div>
+          <div>
+            <span class="text-slate-500 block text-[10px]">Calculated Total</span>
+            <span id="calcTotal" class="font-bold text-slate-200 text-sm">$0.00</span>
+          </div>
+          <div>
+            <span class="text-slate-500 block text-[10px]">Discrepancy</span>
+            <span id="discrepancyAmt" class="font-bold text-emerald-400 text-sm">$0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Line Items Card -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center">
+            <i class="fa-solid fa-list-check mr-2 text-blue-400"></i>Reconciled Line Items
+          </h3>
+          <button id="erpExportBtn" onclick="exportERP()" class="hidden text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded transition border border-slate-700 flex items-center space-x-1">
+            <i class="fa-solid fa-cloud-arrow-up text-blue-400"></i>
+            <span>Export to SAP / QuickBooks</span>
+          </button>
+        </div>
+
+        <div class="overflow-x-auto max-h-60">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-950 text-slate-500 uppercase text-[10px] tracking-wider border-b border-slate-800">
+              <tr>
+                <th class="p-2.5">Description</th>
+                <th class="p-2.5">Qty</th>
+                <th class="p-2.5">Unit Price</th>
+                <th class="p-2.5">Total</th>
+              </tr>
+            </thead>
+            <tbody id="lineItemsBody" class="divide-y divide-slate-800 font-mono">
+              <tr>
+                <td colspan="4" class="p-6 text-center text-slate-600">Extract an invoice to inspect line items.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Vendor & Financial Metadata -->
+      <div id="metaGrid" class="hidden grid grid-cols-2 gap-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-xs space-y-1">
+          <div class="text-[10px] uppercase font-semibold text-slate-500">Vendor Info</div>
+          <div id="vendorName" class="font-bold text-slate-200">--</div>
+          <div id="vendorTax" class="text-slate-400 text-[11px]">Tax ID: --</div>
+          <div id="vendorAddr" class="text-slate-500 text-[11px]">--</div>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-xs space-y-1">
+          <div class="text-[10px] uppercase font-semibold text-slate-500">Financial Breakdown</div>
+          <div class="flex justify-between text-slate-300"><span>Subtotal:</span><span id="subtotalVal">$0.00</span></div>
+          <div class="flex justify-between text-slate-400"><span>Tax:</span><span id="taxVal">$0.00</span></div>
+          <div class="flex justify-between font-bold text-white border-t border-slate-800 pt-1"><span>Total Due:</span><span id="totalVal">$0.00</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ERP Payload Modal -->
+  <div id="erpModal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-file-code text-blue-400"></i>
+          <h3 class="text-sm font-bold text-white">ERP Accounting Payload</h3>
+        </div>
+        <button onclick="document.getElementById('erpModal').classList.add('hidden')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <pre id="erpJsonCode" class="p-3 bg-slate-950 border border-slate-800 rounded-lg text-emerald-400 text-xs font-mono overflow-y-auto max-h-80"></pre>
+    </div>
+  </div>
+
+  <script>
+    let samples = {};
+    let lastExtractedInvoice = null;
+
+    async function fetchSamples() {
+      try {
+        const res = await fetch('/api/samples');
+        samples = await res.json();
+      } catch (e) {
+        console.error('Failed to load samples', e);
+      }
+    }
+    fetchSamples();
+
+    function loadSample(key) {
+      if (samples[key]) {
+        document.getElementById('docInput').value = samples[key];
+      }
+    }
+
+    document.getElementById('extractForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const text = document.getElementById('docInput').value.trim();
+      if (!text) return;
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+
+      try {
+        const res = await fetch('/api/extract', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ document_text: text })
+        });
+        const data = await res.json();
+        lastExtractedInvoice = data.invoice;
+        renderExtraction(data);
+      } catch (err) {
+        alert('Extraction failed: ' + err.message);
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    function renderExtraction(data) {
+      const inv = data.invoice;
+      const audit = data.audit;
+
+      document.getElementById('statusCard').classList.remove('hidden');
+      document.getElementById('metaGrid').classList.remove('hidden');
+      document.getElementById('erpExportBtn').classList.remove('hidden');
+
+      document.getElementById('invoiceNumber').textContent = inv.invoice_number;
+      document.getElementById('auditConfidence').textContent = `Confidence: ${Math.round(audit.confidence_score * 100)}%`;
+
+      const badge = document.getElementById('reviewBadge');
+      badge.textContent = audit.review_status.replace(/_/g, ' ');
+      if (audit.review_status === 'AUTO_APPROVED') {
+        badge.className = 'text-xs font-bold uppercase px-3 py-1 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800';
+      } else {
+        badge.className = 'text-xs font-bold uppercase px-3 py-1 rounded-full bg-amber-950 text-amber-300 border border-amber-800';
+      }
+
+      // Notes
+      const notesEl = document.getElementById('auditNotes');
+      let notesHtml = '';
+      if (audit.validation_errors.length > 0) {
+        notesHtml += audit.validation_errors.map(err => `<div class="text-rose-400 font-mono"><i class="fa-solid fa-circle-xmark mr-1.5"></i>${err}</div>`).join('');
+      } else {
+        notesHtml += `<div class="text-emerald-400 font-mono"><i class="fa-solid fa-circle-check mr-1.5"></i>Mathematical reconciliation passed with 0 discrepancies.</div>`;
+      }
+      if (audit.compliance_flags.length > 0) {
+        notesHtml += audit.compliance_flags.map(flag => `<div class="text-amber-400 font-mono"><i class="fa-solid fa-flag mr-1.5"></i>${flag}</div>`).join('');
+      }
+      notesEl.innerHTML = notesHtml;
+
+      document.getElementById('statedTotal').textContent = `$${inv.financials.total_amount.toFixed(2)}`;
+      document.getElementById('calcTotal').textContent = `$${audit.calculated_total.toFixed(2)}`;
+      const discEl = document.getElementById('discrepancyAmt');
+      discEl.textContent = `$${audit.discrepancy_amount.toFixed(2)}`;
+      discEl.className = audit.discrepancy_amount > 0.05 ? 'font-bold text-rose-400 text-sm' : 'font-bold text-emerald-400 text-sm';
+
+      // Line Items
+      const tbody = document.getElementById('lineItemsBody');
+      tbody.innerHTML = inv.line_items.map(it => `
+        <tr class="hover:bg-slate-800/40 transition">
+          <td class="p-2.5 text-slate-200 font-sans">${it.description}</td>
+          <td class="p-2.5 text-slate-400">${it.quantity}</td>
+          <td class="p-2.5 text-slate-300">$${it.unit_price.toFixed(2)}</td>
+          <td class="p-2.5 text-slate-200 font-bold">$${it.total.toFixed(2)}</td>
+        </tr>
+      `).join('');
+
+      // Metadata
+      document.getElementById('vendorName').textContent = inv.vendor.name;
+      document.getElementById('vendorTax').textContent = `Tax ID / VAT: ${inv.vendor.tax_id || 'Not specified'}`;
+      document.getElementById('vendorAddr').textContent = inv.vendor.address || 'Address on file';
+
+      document.getElementById('subtotalVal').textContent = `$${inv.financials.subtotal.toFixed(2)}`;
+      document.getElementById('taxVal').textContent = `$${inv.financials.tax_amount.toFixed(2)} (${inv.financials.tax_rate_percent}%)`;
+      document.getElementById('totalVal').textContent = `$${inv.financials.total_amount.toFixed(2)}`;
+    }
+
+    async function exportERP() {
+      if (!lastExtractedInvoice) return;
+      try {
+        const res = await fetch('/api/export', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(lastExtractedInvoice)
+        });
+        const data = await res.json();
+        document.getElementById('erpJsonCode').textContent = JSON.stringify(data, null, 2);
+        document.getElementById('erpModal').classList.remove('hidden');
+      } catch (e) {
+        alert('Export error: ' + e.message);
+      }
+    }
+  </script>
+</body>
+</html>
+
