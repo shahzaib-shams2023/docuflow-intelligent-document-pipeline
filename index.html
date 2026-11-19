@@ -1,141 +1,185 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DocuFlow | Intelligent Document & Invoice Processing</title>
+  <title>DocuFlow | Intelligent Document & Invoice Processing Engine</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #030712;
+      background-image: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(37, 99, 235, 0.16), transparent 70%),
+        radial-gradient(circle at 10% 80%, rgba(16, 185, 129, 0.08), transparent 40%);
+      background-attachment: fixed;
+    }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .ocr-terminal {
+      background: #020617;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans">
-  <!-- Navbar -->
-  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
-    <div class="flex items-center space-x-3">
-      <div class="h-9 w-9 rounded-lg bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
-        <i class="fa-solid fa-file-invoice-dollar text-white text-lg"></i>
+<body class="text-slate-100 min-h-screen flex flex-col font-sans selection:bg-blue-500 selection:text-white antialiased">
+  
+  <!-- Header Bar -->
+  <header class="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-xl sticky top-0 z-50 px-6 py-3.5">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-3.5">
+        <div class="h-9 w-9 rounded-xl bg-gradient-to-tr from-blue-600 via-blue-500 to-indigo-400 flex items-center justify-center shadow-lg shadow-blue-500/25 text-white font-bold">
+          <i class="fa-solid fa-file-invoice-dollar text-sm"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="text-sm font-bold text-white tracking-tight">DocuFlow Studio</h1>
+            <span class="text-[10px] font-mono uppercase bg-blue-950/80 text-blue-400 px-2 py-0.5 rounded-full border border-blue-800 font-semibold">
+              IDP & Math Audit
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400">Intelligent Document Processing, Ledger Reconciliation & ERP Webhooks</p>
+        </div>
       </div>
-      <div>
-        <h1 class="text-lg font-bold tracking-tight text-white flex items-center">
-          DocuFlow
-          <span class="ml-2 text-[10px] uppercase font-mono bg-slate-800 text-blue-400 px-2 py-0.5 rounded border border-blue-950">IDP Engine</span>
-        </h1>
-        <p class="text-xs text-slate-400">Intelligent Document Processing, Ledger Math Reconciliation & ERP Sync</p>
+
+      <div class="flex items-center space-x-3">
+        <div class="flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-mono text-emerald-400">
+          <i class="fa-solid fa-scale-balanced text-[11px]"></i>
+          <span>Reconciliation Active</span>
+        </div>
+        <a href="https://shahzaib-shams2023.github.io/ai-engineering-portfolio/" class="text-xs bg-slate-900 hover:bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-800 transition flex items-center space-x-1.5">
+          <i class="fa-solid fa-arrow-left text-[10px]"></i>
+          <span>Portfolio</span>
+        </a>
+        <a href="https://github.com/shahzaib-shams2023/docuflow-intelligent-document-pipeline" target="_blank" class="text-xs bg-slate-900 hover:bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-800 transition flex items-center space-x-1.5">
+          <i class="fa-brands fa-github text-sm"></i>
+          <span>GitHub</span>
+        </a>
       </div>
-    </div>
-    <div class="flex items-center space-x-3">
-      <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-950/80 text-emerald-400 border border-emerald-800">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>
-        Interactive Live Edition
-      </span>
-      <a href="https://shahzaib-shams2023.github.io/ai-engineering-portfolio/" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center space-x-1.5">
-        <i class="fa-solid fa-arrow-left text-xs"></i>
-        <span>Portfolio</span>
-      </a>
-      <a href="https://github.com/shahzaib-shams2023/docuflow-intelligent-document-pipeline" target="_blank" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center space-x-1.5">
-        <i class="fa-brands fa-github text-sm"></i>
-        <span>GitHub</span>
-      </a>
     </div>
   </header>
 
   <!-- Main Grid -->
   <main class="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
-    <!-- Left Column: Document Input -->
-    <div class="lg:col-span-5 space-y-4">
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl">
-        <div class="flex items-center justify-between mb-3">
-          <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center">
-            <i class="fa-solid fa-file-lines mr-2 text-blue-400"></i>Raw Document Text / OCR
+    
+    <!-- Left Column: Document Ingestion -->
+    <div class="lg:col-span-5 space-y-5">
+      <div class="glass-panel rounded-2xl p-5 shadow-xl space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center font-mono">
+            <i class="fa-solid fa-file-lines mr-2 text-blue-400"></i>Raw Document Text / OCR Stream
           </h2>
-          <span class="text-[10px] text-slate-500 font-mono">Text / PDF Dump</span>
+          <span class="text-[10px] text-slate-500 font-mono">OCR Text / PDF Dump</span>
         </div>
 
-        <form id="extractForm" class="space-y-3">
+        <form id="extractForm" class="space-y-4">
           <div>
             <textarea id="docInput" rows="13" required
               placeholder="Paste raw invoice text, OCR dump, or select a sample..."
-              class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-300 focus:outline-none focus:border-blue-500 leading-relaxed"></textarea>
+              class="w-full ocr-terminal rounded-xl p-3.5 text-xs text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-blue-500 leading-relaxed"></textarea>
           </div>
 
           <!-- Samples -->
           <div>
-            <span class="text-xs text-slate-500 block mb-1.5">Load Benchmark Invoice:</span>
+            <span class="text-[11px] text-slate-500 block mb-1.5 font-mono">Load Benchmark Invoice:</span>
             <div class="flex flex-wrap gap-1.5">
-              <button type="button" onclick="loadSample('clean_software_invoice')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded transition border border-slate-700">
-                <i class="fa-solid fa-check text-emerald-400 mr-1"></i>Clean Software Invoice
+              <button type="button" onclick="loadSample('clean_software_invoice')" class="text-xs bg-slate-900 hover:bg-slate-800 text-slate-200 px-2.5 py-1.5 rounded-lg transition border border-slate-800 flex items-center">
+                <i class="fa-solid fa-circle-check text-emerald-400 mr-1.5 text-xs"></i>Clean SaaS Invoice
               </button>
-              <button type="button" onclick="loadSample('discrepant_invoice')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded transition border border-slate-700">
-                <i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1"></i>Discrepant Ledger (Math Audit)
+              <button type="button" onclick="loadSample('discrepant_invoice')" class="text-xs bg-slate-900 hover:bg-slate-800 text-slate-200 px-2.5 py-1.5 rounded-lg transition border border-slate-800 flex items-center">
+                <i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1.5 text-xs"></i>Discrepant Ledger (Math Audit)
               </button>
             </div>
           </div>
 
-          <button type="submit" id="submitBtn" class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-medium text-xs flex items-center justify-center space-x-2 transition shadow-lg shadow-blue-600/20">
-            <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <button type="submit" id="submitBtn" class="w-full py-2.5 px-4 bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl font-medium text-xs flex items-center justify-center space-x-2 transition shadow-lg shadow-blue-600/25">
+            <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
             <span>Extract & Reconcile Ledger</span>
           </button>
         </form>
       </div>
 
-      <!-- Capabilities -->
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl text-xs space-y-2">
-        <h3 class="font-semibold text-slate-300 uppercase tracking-wider text-[11px] flex items-center">
-          <i class="fa-solid fa-scale-balanced mr-2 text-blue-400"></i>Audit Safeguards
+      <!-- Audit Blueprint -->
+      <div class="glass-panel rounded-2xl p-5 shadow-xl text-xs space-y-2">
+        <h3 class="font-semibold text-slate-300 uppercase tracking-wider text-[11px] flex items-center font-mono">
+          <i class="fa-solid fa-scale-balanced mr-2 text-blue-400"></i>Mathematical Safeguards
         </h3>
-        <ul class="space-y-1.5 text-slate-400">
-          <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 text-[10px] mr-2"></i>Deterministic Line-Item Verification: <code>Qty × Price == Total</code></li>
+        <ul class="space-y-1.5 text-slate-400 text-[11px]">
+          <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 text-[10px] mr-2"></i>Deterministic Line-Item Verification: <code>Qty × Unit Price == Line Total</code></li>
           <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 text-[10px] mr-2"></i>Double-Entry Balance Verification: <code>Subtotal + Tax == Grand Total</code></li>
-          <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 text-[10px] mr-2"></i>Pydantic v2 Typed Schema Enforcement</li>
+          <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 text-[10px] mr-2"></i>Pydantic v2 Typed Strict Schema Enforcement</li>
           <li class="flex items-center"><i class="fa-solid fa-check text-emerald-400 text-[10px] mr-2"></i>SAP S/4HANA & QuickBooks Enterprise Payload Generator</li>
         </ul>
       </div>
     </div>
 
-    <!-- Right Column: Extracted Invoice & Audit -->
-    <div class="lg:col-span-7 space-y-4">
-      <!-- Status & Compliance Card -->
-      <div id="statusCard" class="hidden bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl space-y-3">
+    <!-- Right Column: Extracted Ledger & Audit Strip -->
+    <div class="lg:col-span-7 space-y-5">
+      
+      <!-- Review Status Banner -->
+      <div id="statusCard" class="hidden glass-panel rounded-2xl p-5 shadow-xl space-y-3">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-3">
-            <span id="reviewBadge" class="text-xs font-bold uppercase px-3 py-1 rounded-full"></span>
-            <span id="invoiceNumber" class="text-xs font-mono text-slate-400 font-bold"></span>
+            <span id="reviewBadge" class="text-xs font-bold uppercase font-mono px-3 py-1 rounded-full"></span>
+            <span id="invoiceNumber" class="text-xs font-mono text-slate-300 font-bold"></span>
           </div>
-          <span id="auditConfidence" class="text-xs font-mono text-slate-400"></span>
+          <span id="auditConfidence" class="text-xs font-mono text-emerald-400 font-bold"></span>
         </div>
-        <div id="auditNotes" class="text-xs space-y-1 pt-1">
+        <div id="auditNotes" class="text-xs space-y-1 pt-1 bg-slate-950/80 p-3 rounded-xl border border-slate-800">
         </div>
       </div>
 
       <!-- Financials Comparison Strip -->
       <div id="metaGrid" class="hidden grid grid-cols-3 gap-3">
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-3.5 text-center">
-          <span class="text-[10px] text-slate-500 uppercase tracking-wider block">Stated Invoice Total</span>
-          <span id="statedTotal" class="text-base font-bold text-slate-200">--</span>
+        <div class="glass-panel rounded-2xl p-3.5 text-center">
+          <span class="text-[10px] text-slate-500 uppercase tracking-wider block font-mono">Stated Total</span>
+          <span id="statedTotal" class="text-lg font-bold font-mono text-slate-200 mt-0.5 block">--</span>
         </div>
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-3.5 text-center">
-          <span class="text-[10px] text-slate-500 uppercase tracking-wider block">Calculated Total</span>
-          <span id="calcTotal" class="text-base font-bold text-slate-200">--</span>
+        <div class="glass-panel rounded-2xl p-3.5 text-center">
+          <span class="text-[10px] text-slate-500 uppercase tracking-wider block font-mono">Calculated Total</span>
+          <span id="calcTotal" class="text-lg font-bold font-mono text-slate-200 mt-0.5 block">--</span>
         </div>
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-3.5 text-center">
-          <span class="text-[10px] text-slate-500 uppercase tracking-wider block">Discrepancy</span>
-          <span id="discrepancyAmt" class="text-base font-bold text-emerald-400">$0.00</span>
+        <div class="glass-panel rounded-2xl p-3.5 text-center">
+          <span class="text-[10px] text-slate-500 uppercase tracking-wider block font-mono">Discrepancy</span>
+          <span id="discrepancyAmt" class="text-lg font-bold font-mono text-emerald-400 mt-0.5 block">$0.00</span>
         </div>
       </div>
 
-      <!-- Line Items Table -->
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl space-y-3">
+      <!-- Extracted Line Items Table -->
+      <div class="glass-panel rounded-2xl p-5 shadow-xl space-y-3">
         <div class="flex items-center justify-between">
-          <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center">
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center font-mono">
             <i class="fa-solid fa-list-ol mr-2 text-blue-400"></i>Extracted Line Items
           </h3>
-          <button id="erpExportBtn" onclick="exportERP()" class="hidden text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded border border-slate-700 transition flex items-center space-x-1.5">
+          <button id="erpExportBtn" onclick="exportERP()" class="hidden text-xs bg-slate-900 hover:bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-800 transition flex items-center space-x-1.5 hover:border-blue-500/40">
             <i class="fa-solid fa-file-export text-blue-400"></i>
             <span>Generate ERP Payload</span>
           </button>
         </div>
-        <div class="overflow-x-auto max-h-[220px] rounded-lg border border-slate-800">
+        <div class="overflow-x-auto max-h-[220px] rounded-xl border border-slate-800/80">
           <table class="w-full text-left text-xs border-collapse">
-            <thead class="bg-slate-950 text-slate-400 sticky top-0 border-b border-slate-800">
+            <thead class="bg-slate-950 text-slate-400 sticky top-0 border-b border-slate-800 font-mono">
               <tr>
                 <th class="p-2.5">Item Description</th>
                 <th class="p-2.5">Qty</th>
@@ -143,45 +187,45 @@
                 <th class="p-2.5">Line Total</th>
               </tr>
             </thead>
-            <tbody id="lineItemsBody" class="divide-y divide-slate-800 font-mono text-[11px]">
+            <tbody id="lineItemsBody" class="divide-y divide-slate-800/60 font-mono text-[11px]">
               <tr><td colspan="4" class="p-4 text-center text-slate-600 font-sans">No document processed yet.</td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- Vendor & Financial Metadata -->
+      <!-- Vendor & Financial Metadata Grid -->
       <div class="grid grid-cols-2 gap-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1.5 text-xs">
-          <span class="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">Vendor Entity</span>
+        <div class="glass-panel rounded-2xl p-4 space-y-1.5 text-xs">
+          <span class="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold font-mono">Vendor Entity</span>
           <div id="vendorName" class="font-bold text-slate-200">--</div>
           <div id="vendorTax" class="text-slate-400 font-mono text-[11px]">--</div>
           <div id="vendorAddr" class="text-slate-500 text-[11px]">--</div>
         </div>
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1.5 text-xs">
-          <span class="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">Financial Breakdown</span>
+        <div class="glass-panel rounded-2xl p-4 space-y-1.5 text-xs">
+          <span class="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold font-mono">Financial Ledger</span>
           <div class="flex justify-between"><span class="text-slate-400">Subtotal:</span><span id="subtotalVal" class="font-mono text-slate-200">--</span></div>
           <div class="flex justify-between"><span class="text-slate-400">Tax / VAT:</span><span id="taxVal" class="font-mono text-slate-200">--</span></div>
-          <div class="flex justify-between font-bold border-t border-slate-800 pt-1"><span class="text-slate-200">Stated Total:</span><span id="totalVal" class="font-mono text-blue-400">--</span></div>
+          <div class="flex justify-between font-bold border-t border-slate-800 pt-1"><span class="text-slate-200">Grand Total:</span><span id="totalVal" class="font-mono text-blue-400">--</span></div>
         </div>
       </div>
     </div>
   </main>
 
   <!-- ERP Payload Modal -->
-  <div id="erpModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4">
+  <div id="erpModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-panel rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <h3 class="text-sm font-bold text-white flex items-center">
+        <h3 class="text-sm font-bold text-white flex items-center font-mono">
           <i class="fa-solid fa-code mr-2 text-blue-400"></i>SAP S/4HANA & ERP Integration Payload
         </h3>
-        <button onclick="document.getElementById('erpModal').classList.add('hidden')" class="text-slate-400 hover:text-white">
-          <i class="fa-solid fa-xmark"></i>
+        <button onclick="document.getElementById('erpModal').classList.add('hidden')" class="text-slate-400 hover:text-white p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
         </button>
       </div>
-      <pre id="erpJsonCode" class="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-xs text-blue-300 max-h-[350px] overflow-y-auto"></pre>
+      <pre id="erpJsonCode" class="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-xs text-blue-300 max-h-[350px] overflow-y-auto leading-relaxed"></pre>
       <div class="flex justify-end">
-        <button onclick="navigator.clipboard.writeText(document.getElementById('erpJsonCode').textContent)" class="text-xs bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-medium transition flex items-center space-x-1.5">
+        <button onclick="navigator.clipboard.writeText(document.getElementById('erpJsonCode').textContent)" class="text-xs bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-medium transition flex items-center space-x-1.5 shadow-md shadow-blue-600/30">
           <i class="fa-regular fa-copy"></i>
           <span>Copy Payload JSON</span>
         </button>
@@ -354,21 +398,21 @@ Total: $2,450.00`
       const badge = document.getElementById('reviewBadge');
       badge.textContent = audit.review_status.replace(/_/g, ' ');
       if (audit.review_status === 'AUTO_APPROVED') {
-        badge.className = 'text-xs font-bold uppercase px-3 py-1 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800';
+        badge.className = 'text-xs font-bold uppercase font-mono px-3 py-1 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800';
       } else {
-        badge.className = 'text-xs font-bold uppercase px-3 py-1 rounded-full bg-amber-950 text-amber-300 border border-amber-800';
+        badge.className = 'text-xs font-bold uppercase font-mono px-3 py-1 rounded-full bg-amber-950 text-amber-300 border border-amber-800';
       }
 
       // Notes
       const notesEl = document.getElementById('auditNotes');
       let notesHtml = '';
       if (audit.validation_errors.length > 0) {
-        notesHtml += audit.validation_errors.map(err => `<div class="text-rose-400 font-mono"><i class="fa-solid fa-circle-xmark mr-1.5"></i>${err}</div>`).join('');
+        notesHtml += audit.validation_errors.map(err => `<div class="text-rose-400 font-mono text-[11px]"><i class="fa-solid fa-circle-xmark mr-1.5"></i>${err}</div>`).join('');
       } else {
-        notesHtml += `<div class="text-emerald-400 font-mono"><i class="fa-solid fa-circle-check mr-1.5"></i>Mathematical reconciliation passed with 0 discrepancies.</div>`;
+        notesHtml += `<div class="text-emerald-400 font-mono text-[11px]"><i class="fa-solid fa-circle-check mr-1.5"></i>Mathematical double-entry ledger reconciliation passed with 0 discrepancies.</div>`;
       }
       if (audit.compliance_flags.length > 0) {
-        notesHtml += audit.compliance_flags.map(flag => `<div class="text-amber-400 font-mono"><i class="fa-solid fa-flag mr-1.5"></i>${flag}</div>`).join('');
+        notesHtml += audit.compliance_flags.map(flag => `<div class="text-amber-400 font-mono text-[11px]"><i class="fa-solid fa-flag mr-1.5"></i>${flag}</div>`).join('');
       }
       notesEl.innerHTML = notesHtml;
 
@@ -376,7 +420,7 @@ Total: $2,450.00`
       document.getElementById('calcTotal').textContent = `$${audit.calculated_total.toFixed(2)}`;
       const discEl = document.getElementById('discrepancyAmt');
       discEl.textContent = `$${audit.discrepancy_amount.toFixed(2)}`;
-      discEl.className = audit.discrepancy_amount > 0.05 ? 'font-bold text-rose-400 text-sm' : 'font-bold text-emerald-400 text-sm';
+      discEl.className = audit.discrepancy_amount > 0.05 ? 'font-bold font-mono text-rose-400 text-lg' : 'font-bold font-mono text-emerald-400 text-lg';
 
       // Line Items
       const tbody = document.getElementById('lineItemsBody');
